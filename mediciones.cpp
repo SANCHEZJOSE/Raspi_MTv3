@@ -72,6 +72,7 @@ float recolecta_Data(ADS1256 & ads24,ADS1115 & ads16,float ** data)
 	bool check_timeout=false;
 	clock_gettime( CLOCK_REALTIME, &ts1 );
 	while(i < filas){
+		flag=i;
 		ads16.Differential_0_1(); 
 		if ((check_timeout=ads24.waitDRDY(time_out))){//recibe como parametros en tiempo en microsegundos(aprox) para timeout
 			break;
