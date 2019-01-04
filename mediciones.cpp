@@ -11,7 +11,7 @@ int clock_divisor=256;///Divisor Reloj (bcm2835 250 Mhz)
 	
 float vRef = 2.5,tiempo,dt,minutos_Muestro=20,save_min=5,ponderacion=0.0000625;///Volt. de referencia por defecto,Variable t(us)
 int filas,columnas=5,sps=150,muestras_anteriores,blink=2,flag=0;
-unsigned int time_out=4000;//tiempo en microsegundos ;
+unsigned int time_out=5000;//tiempo en microsegundos ;
 float **datos;///doble puntero para matriz dinamica
 bool estado=false,inicio=true;
 //funciones y macros
@@ -108,15 +108,18 @@ float recolecta_Data(ADS1256 & ads24,ADS1115 & ads16,float ** data)
 			ads24.reboot(ADS1256_DRATE_500SPS,ADS1256_GAIN_1);///Configuracion
 			printf("Retomando lectura\n");fflush(stdout);
 			inicio=true;
+			clock_gettime( CLOCK_REALTIME, &ts2 );
+			tiempo=(float) ((1.0*ts2.tv_nsec - ts1.tv_nsec*1.0)*1e-9 +1.0*ts2.tv_sec - 1.0*ts1.tv_sec )*1000.0;
+	    	return(tiempo/(float)(flag+1));
 			}
 		else{
 			inicio=false;
 			flag=filas;
+			clock_gettime( CLOCK_REALTIME, &ts2 );
+			tiempo=(float) ((1.0*ts2.tv_nsec - ts1.tv_nsec*1.0)*1e-9 +1.0*ts2.tv_sec - 1.0*ts1.tv_sec )*1000.0;
+	    	return(tiempo/(float)(filas));
 		}
-		clock_gettime( CLOCK_REALTIME, &ts2 );
-		tiempo=(float) ((1.0*ts2.tv_nsec - ts1.tv_nsec*1.0)*1e-9 +1.0*ts2.tv_sec - 1.0*ts1.tv_sec )*1000.0;
-		
-	    return(tiempo/(float)(flag+1));
+
 }
 float save_data(float **matriz,float delta,float t_0,char * name){
 	int aux;
