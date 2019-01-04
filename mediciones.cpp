@@ -47,7 +47,7 @@ int main(int argc,char * argv[])
     while (min_rec<minutos_Muestro) {
 		dt=recolecta_Data(adc24b,adc16b,datos);
 		tbase=save_data(datos,dt,tbase,argv[1]);
-		printf("Datos temporales guardados\n");
+		printf("Datos temporales guardados: %d\n",time_base);
 		min_rec+=save_min;
     };  
     for (int i = 0; i <filas; i++) {
