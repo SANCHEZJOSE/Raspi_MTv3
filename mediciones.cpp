@@ -31,9 +31,9 @@ int main(int argc,char * argv[])
 	adc16b.begin();
 	adc16b.setGain(GAIN_TWO);
 	printf("ADC 16 Bits begin\n");
-	ADS1256 adc24b(clock_divisor,vRef,true,4,8);///Pre config. de prot. SPI
+	ADS1256 adc24b(clock_divisor,vRef,true,12,16);///Pre config. de prot. SPI
 	printf("ADC 24 Bits begin\n");
-    adc24b.begin(ADS1256_DRATE_1000SPS,ADS1256_GAIN_1,false);///Configuracion
+    	adc24b.begin(ADS1256_DRATE_500SPS,ADS1256_GAIN_1,false);///Configuracion
 	printf("Creacion Matriz dinamica\n");
 	filas=sps*60.0*save_min;
 	    datos = new float* [filas];///vector de punteros
