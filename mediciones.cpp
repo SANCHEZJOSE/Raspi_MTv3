@@ -124,7 +124,7 @@ float recolecta_Data(ADS1256 & ads24,ADS1115 & ads16,float ** data)
 
 }
 void save_data(float **matriz,float delta,float t_0,char * name){
-	int aux;
+	//int aux;
 	FILE * archivo=fopen(name,"a+");
 	for (int i = 0; i < flag; i++){
 	    fprintf(archivo,"%.4f\t",delta*i+t_0);
@@ -137,7 +137,7 @@ void save_data(float **matriz,float delta,float t_0,char * name){
     	}
     	
         fprintf(archivo,"\n");
-        aux=i;
+		//aux=i;
         }
 	fclose(archivo);
 	// if (flag!=filas)
