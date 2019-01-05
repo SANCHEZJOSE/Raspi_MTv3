@@ -43,9 +43,9 @@ int main(int argc,char * argv[])
     }
     printf("Iniciando lectura\n");
     struct timeval tiempoini, tiempoact;//estructuras para manejo de tiempo
-    float tbase=0;
+    float tbase=0,tolerancia=1000;
     gettimeofday(&tiempoini,NULL);//se guarda el tiempo al iniciar el datalogger
-    while (tbase<minutos_Muestreo*6e4) {
+    while (tbase<(minutos_Muestreo*6e4+tolerancia) {
 		dt=recolecta_Data(adc24b,adc16b,datos);
 		save_data(datos,dt,tbase,argv[1]);
 		gettimeofday(&tiempoact,NULL);//se guarda el tiempo transcurrido en el proceso para obtener la diferencia
