@@ -42,7 +42,7 @@ int main(int argc,char * argv[])
         datos[i] = new float[columnas];///vector de 4 punteros para cada fila
     }
     printf("Iniciando lectura\n");
-    struct timeval tiempoini tiempoact;//estructuras para manejo de tiempo
+    struct timeval tiempoini, tiempoact;//estructuras para manejo de tiempo
     float tbase=0;
     gettimeofday(&tiempoini,NULL);//se guarda el tiempo al iniciar el datalogger
     while (tbase<minutos_Muestreo*6e4) {
