@@ -1,4 +1,5 @@
 #include <time.h>
+#include <sys/time.h>
 #include <inttypes.h>
 #include <algorithm>    // std::max
 #include <unistd.h>
@@ -9,14 +10,14 @@
 //Variables
 int clock_divisor=256;///Divisor Reloj (bcm2835 250 Mhz)
 	
-float vRef = 2.5,tiempo,dt,minutos_Muestro=20,save_min=5,ponderacion=0.0000625;///Volt. de referencia por defecto,Variable t(us)
+float vRef = 2.5,tiempo,dt,minutos_Muestreo=20,save_min=5,ponderacion=0.0000625;///Volt. de referencia por defecto,Variable t(us)
 int filas,columnas=5,sps=150,muestras_anteriores,blink=2,flag=0;
 unsigned int time_out=5000;//tiempo en microsegundos ;
 float **datos;///doble puntero para matriz dinamica
 bool estado=false,inicio=true;
 //funciones y macros
 void setup(void);
-float save_data(float **,float,float,char *);///Permite guardar los datos en un archivo .txt
+void save_data(float **,float,float,char *);///Permite guardar los datos en un archivo .txt
 float recolecta_Data(ADS1256 &,ADS1115 &,float **);///Permite recolectar los datos
 ///											del conversor ads1256.
 struct timespec ts1, ts2;/// estructuras necesarias para calculo de 
@@ -41,14 +42,15 @@ int main(int argc,char * argv[])
         datos[i] = new float[columnas];///vector de 4 punteros para cada fila
     }
     printf("Iniciando lectura\n");
-    
-    float min_rec = 0;
+    struct timeval tiempoini tiempoact;//estructuras para manejo de tiempo
     float tbase=0;
-    while (min_rec<minutos_Muestro) {
+    gettimeofday(&tiempoini,NULL);//se guarda el tiempo al iniciar el datalogger
+    while (tbase<minutos_Muestreo*6e4) {
 		dt=recolecta_Data(adc24b,adc16b,datos);
-		tbase=save_data(datos,dt,tbase,argv[1]);
+		save_data(datos,dt,tbase,argv[1]);
+		gettimeofday(&tiempoact,NULL);//se guarda el tiempo transcurrido en el proceso para obtener la diferencia
+		tbase=(float) ((1.0*tiempoact.tv_usec - tiempoini.tv_usec*1.0)*1e-6 +1.0*tiempoact.tv_sec - 1.0*tiempoini.tv_sec )*1000.0;//tiempo en milisegundos para la siguiente muestra
 		printf("Datos temporales guardados: %0.9f\n",tbase);
-		min_rec+=save_min;
     };  
     for (int i = 0; i <filas; i++) {
         delete[] datos[i];
@@ -121,7 +123,7 @@ float recolecta_Data(ADS1256 & ads24,ADS1115 & ads16,float ** data)
 		}
 
 }
-float save_data(float **matriz,float delta,float t_0,char * name){
+void save_data(float **matriz,float delta,float t_0,char * name){
 	int aux;
 	FILE * archivo=fopen(name,"a+");
 	for (int i = 0; i < flag; i++){
@@ -138,10 +140,10 @@ float save_data(float **matriz,float delta,float t_0,char * name){
         aux=i;
         }
 	fclose(archivo);
-	if (flag!=filas)
-		return delta*aux+t_0+(float)(time_out/1000.0);
-	else
-		return delta*aux+t_0;
+	// if (flag!=filas)
+	// 	return delta*aux+t_0+(float)(time_out/1000.0);
+	// else
+	// 	return delta*aux+t_0;
 }
 
 void setup(){
@@ -151,8 +153,8 @@ void setup(){
         printf( "Error! el archivo de config no se encuentra.\n Variables iniciadas con valores por defecto\n");
 
     }
-    else{ minutos_Muestro = (float)reader.GetReal("configuraciones", "minutos",20.0);
-           printf("TIEMPO DE MUESTREO : %f MINUTOS\n", minutos_Muestro );
+    else{ minutos_Muestreo = (float)reader.GetReal("configuraciones", "minutos",20.0);
+           printf("TIEMPO DE MUESTREO : %f MINUTOS\n", minutos_Muestreo );
            save_min = (float)reader.GetReal("configuraciones", "save",0.5);
            printf("TIEMPO PARA GUARDAR : %f MINUTOS\n", save_min );
            sps = reader.GetInteger("configuraciones", "sps",150);
