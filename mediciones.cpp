@@ -131,10 +131,10 @@ void save_data(float **matriz,float delta,float t_0,char * name){
 		for (int j = 0; j <columnas; j++){
         	fprintf(archivo,"%.9f\t",matriz[i][j]);
     	}
-    	if (flag!=filas && i ==(flag-1))
-    	{
-    		fprintf(archivo,"Time_Out!!");
-    	}
+    	// if (flag!=filas && i ==(flag-1))
+    	// {
+    	// 	fprintf(archivo,"Time_Out!!");
+    	// }
     	
         fprintf(archivo,"\n");
 		//aux=i;
