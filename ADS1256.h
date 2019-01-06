@@ -97,6 +97,7 @@ class ADS1256 {
   void begin(unsigned char drate, unsigned char gain, bool bufferenable);
   bool waitDRDY(unsigned int micros);
   void reboot(unsigned char drate, unsigned char gain);
+  void reboot_fast(unsigned char drate, unsigned char gain);
   void waitDRDY();
   void setGain(uint8_t gain);
   ~ADS1256() {bcm2835_spi_end();}
