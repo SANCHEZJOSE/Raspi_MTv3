@@ -16,4 +16,4 @@ contador=$[contador+1]
 archivo='datos_'${fecha}'('${contador}').txt'
 done
 # Paso 3, corre el codigo
-sudo ./prog.o ${archivo}  
+#sudo ./prog.o ${archivo}  
